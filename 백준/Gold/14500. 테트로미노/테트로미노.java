@@ -7,7 +7,7 @@ public class Main {
 	static int[][] arr;
 	static int[] dx = {-1, 1, 0, 0}, dy = {0, 0, -1, 1};
 	static boolean[][] visited;
-	static int max;
+	static int max, maxBlock;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -29,6 +29,12 @@ public class Main {
 			}
 		}
 		
+		maxBlock = 0;
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < M; j++) {
+				maxBlock = Math.max(maxBlock, arr[i][j]);
+			}
+		}
 		max = 0;
 		
 		for(int i=0; i<N; i++) {
@@ -46,6 +52,8 @@ public class Main {
 	}
 
     private static void dfs(int x, int y, int sum, int count) {
+    	
+    	if (sum + (4 - count) * maxBlock <= max) return;
     	
     	if(count == 4) {
     		max = Math.max(sum, max);
