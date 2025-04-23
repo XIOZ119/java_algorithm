@@ -5,7 +5,13 @@ public class Main {
 	// 적록색약 아닌 사람 : 빨강, 파랑, 초록
 	// 적록색약인 사람 : 빨강-초록, 파랑
 	// BFS 적록색약인 경우, 아닌 경우 나누어 계산
-	// boolean visited 배열 -> 전역변수
+
+	// 최적화
+	// String 배열 -> char 배열
+	// visited 배열 2개 사용 -> 1개 사용
+	// bfs 파라미터로 boolean isRG 보내기
+	// bfs 내부 함수에서 canVisit(char color1, char color2, boolean isRG) 함수 생성
+	// -> 적록색약이 아닌 경우 color1 == color2, 적록색약인 경우 color1 == color2 혹은 RG동급 처리
 
 	static int N;
 	static String[][] arr;
