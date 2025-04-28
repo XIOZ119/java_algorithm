@@ -4,6 +4,15 @@ import java.util.*;
 
 public class Main {
 
+    /*
+     *  - BFS : "모든 간선의 가중치가 같을 때" 최단 거리를 구함
+        - 지금은 arr[x][y] 값이 다 다름 (가중치가 다름)
+        - ⇒ 가중치가 다르면 BFS 불가 !
+        - 무조건 가까운 칸을 먼저 가는 게 최적이 아닐 수 있기 때문
+
+        → 그래서 "거리 갱신"이 필요하고, 그걸 다익스트라(우선순위큐)로 풀어라 ~
+     */
+
     static int N;
     static int[][] arr;
     static int[][] d; // 짧은 거리 기록
