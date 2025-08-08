@@ -1,78 +1,84 @@
-import java.io.*;
-import java.lang.*;
 import java.util.*;
+import java.lang.*;
+import java.io.*;
 
-public class Main {
 
-    static int N;
+class Main {
+    static int[] dx = {-1, 1, 0, 0};
+    static int[] dy = {0, 0, -1, 1};
     static int[][] arr;
-    static int[][] d; // 짧은 거리 기록
-    static int[] dx = {-1, 1, 0, 0}, dy = {0, 0, -1, 1};
-
+    static int[][] visited;
+    static int n;
+    
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringBuilder sb = new StringBuilder();
         StringTokenizer st;
 
-        int count = 0;
+        int start = 0;
+        
+        while(true) {
+            n = Integer.parseInt(br.readLine());
+            if(n==0) break;
 
-        while(true){
-            count++;
-            N = Integer.parseInt(br.readLine());
+            arr = new int[n][n];
+            visited = new int[n][n];
 
-            if(N == 0) break;
-            arr = new int[N][N];
-            d = new int[N][N];
+            for(int i=0; i<n; i++) {
+                Arrays.fill(visited[i], Integer.MAX_VALUE);
+            }
 
-            for(int i=0; i<N; i++) {
+            for(int i=0; i<n; i++){
                 st = new StringTokenizer(br.readLine());
-                for(int j=0; j<N; j++){
+                for(int j=0; j<n; j++) {
                     arr[i][j] = Integer.parseInt(st.nextToken());
-                    d[i][j] = Integer.MAX_VALUE;
                 }
             }
             
-            int result = escape();
-
-            sb.append("Problem " + count + ": " + result + "\n");
+            int d = dijkstra();
+            sb.append("Problem " + ++start + ": " + d + "\n");
         }
-        
+
         bw.write(sb.toString());
         bw.flush();
         bw.close();
     }
 
-    static int escape() {
-        Queue<int []> queue = new LinkedList<>();
-        
-        queue.add(new int[] {0, 0, arr[0][0]});
-        d[0][0] = arr[0][0];
+    static int dijkstra(){
+        PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(a -> a[2]));
+        pq.add(new int[] {0, 0, arr[0][0]});
+        visited[0][0] = arr[0][0];
 
-        while(!queue.isEmpty()){
-            int[] cur = queue.poll();
+        while(!pq.isEmpty()){
+            int cur[] = pq.poll();
+            
             int cx = cur[0];
             int cy = cur[1];
             int cd = cur[2];
+
+            if(visited[cx][cy] < cd) continue;
+            
+            if(cx == n-1 && cy == n-1) {
+                return cd;
+            }
 
             for(int i=0; i<4; i++) {
                 int nx = cx + dx[i];
                 int ny = cy + dy[i];
 
                 if(!isValid(nx, ny)) continue;
-                
-                int nd = cd + arr[nx][ny];
-                if(d[nx][ny] > nd) {
-                    queue.add(new int[] {nx, ny, nd});
-                    d[nx][ny] = nd;
+                if(cd + arr[nx][ny] < visited[nx][ny]) {
+                    visited[nx][ny] = cd + arr[nx][ny];
+                    pq.add(new int[] {nx, ny, cd + arr[nx][ny]});
                 }
             }
         }
-
-        return d[N-1][N-1];
+        
+        return -1;
     }
 
-    static boolean isValid(int x, int y) {
-        return x >= 0 && y >= 0 && x < N && y < N;
+    static boolean isValid(int x, int y){
+        return x > -1 && y > -1 && x < n && y < n;
     }
-}  
+}
