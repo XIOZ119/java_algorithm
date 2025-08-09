@@ -1,48 +1,50 @@
-import java.io.*;
 import java.util.*;
+import java.lang.*;
+import java.io.*;
 
-public class Main {
-	private static int[] arr;
-	private static boolean[] visited;
-	private static int N, M;
+class Main {
+    static int n, m;
+    static int[] pick;
+    static boolean[] visited;
+    static StringBuilder sb;
+    
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        sb = new StringBuilder();
+        StringTokenizer st;
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		
-		String str = br.readLine();
-		StringTokenizer st = new StringTokenizer(str);
-		
-		N = Integer.parseInt(st.nextToken());
-		M = Integer.parseInt(st.nextToken());
-		
-		visited = new boolean[N];
-		arr = new int[M];
-		
-		perm(0);
-		
-	}
-	
-	private static void perm(int depth) {
-		
-		if(depth == M) {
-			for(int val: arr) {
-				System.out.print(val + " ");
-			}
-			System.out.println();
-			return;
-		}
-		
-		for(int i=0; i<N; i++) {
-			
-			if(visited[i] == false) {
-				visited[i] = true;
-				arr[depth] = i+1;
-				perm(depth+1);
-				
-				visited[i] = false;
-			}
-			
-		}
-	}
+        st = new StringTokenizer(br.readLine());
 
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
+
+        visited = new boolean[n+1];
+        pick = new int[m];
+
+        dfs(1, 0);
+
+        bw.write(sb.toString());
+        bw.flush();
+        bw.close();
+    }
+
+    static void dfs(int start, int depth){
+        if(depth == m){
+            for(int i=0; i<m; i++){
+                sb.append(pick[i]).append(" ");
+            }
+            sb.append("\n");
+            return;
+        }
+
+        for(int i=1; i<n+1; i++){
+            if(!visited[i]){
+                visited[i] = true;
+                pick[depth] = i;
+                dfs(start, depth+1);
+                visited[i] = false;
+            }
+        }
+    }
 }
