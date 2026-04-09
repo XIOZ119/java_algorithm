@@ -1,5 +1,6 @@
 import java.util.*;
 
+// git 
 class Solution {
     public double[] solution(int k, int[][] ranges) {
         ArrayList<Integer> list = new ArrayList<>();
