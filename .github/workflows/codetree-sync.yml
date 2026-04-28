@@ -5,6 +5,9 @@ on:
     - cron: '0 16 * * *'  # 매일 KST 1시 (UTC 기준 16시)
   workflow_dispatch:      # 수동 실행 버튼도 추가
 
+permissions:
+  contents: write
+  
 jobs:
   sync:
     runs-on: ubuntu-latest
@@ -22,7 +25,7 @@ jobs:
 
       - name: Add codetree remote
         run: |
-          git remote add codetree https://github.com/XIOZ119/codetree_solutions.git
+          git remote add codetree https://x-access-token:${{ secrets.CODETREE_TOKEN }}@github.com/XIOZ119/codetree_solutions.git
           git fetch codetree
 
       - name: Pull codetree subtree
