@@ -1,0 +1,4 @@
+SELECT SUM(i.price) AS 'TOTAL_PRICE'
+FROM ITEM_INFO i
+WHERE i.rarity = 'LEGEND'
+GROUP BY i.rarity;
