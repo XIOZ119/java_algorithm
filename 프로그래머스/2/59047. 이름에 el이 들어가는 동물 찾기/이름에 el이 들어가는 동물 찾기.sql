@@ -1,0 +1,18 @@
+# SELECT ANIMAL_ID, NAME
+# FROM ANIMAL_INS 
+# WHERE ANIMAL_TYPE = 'Dog'
+# AND (
+#     NAME LIKE '%el%'
+#     OR NAME LIKE '%EL%'
+#     OR NAME LIKE '%eL'
+#     OR NAME LIKE '%El'
+# )
+# ORDER BY NAME ASC;
+
+SELECT ANIMAL_ID, NAME
+FROM ANIMAL_INS
+WHERE ANIMAL_TYPE = 'Dog'
+AND LOWER(NAME) LIKE '%el%' #전부 소문자로 바꾸어 비교 (LIKE는 대소문자 구분 안 하긴 함)
+ORDER BY NAME ASC;
+
+# WHERE BINARY NAME LIKE '%el%' # 대소문자 구분
