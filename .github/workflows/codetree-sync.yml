@@ -23,6 +23,10 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+      - name: Test codetree token
+        run: |
+          git ls-remote https://x-access-token:${{ secrets.CODETREE_TOKEN }}@github.com/XIOZ119/codetree_solutions.git
+
       - name: Add codetree remote
         run: |
           git remote add codetree https://x-access-token:${{ secrets.CODETREE_TOKEN }}@github.com/XIOZ119/codetree_solutions.git
