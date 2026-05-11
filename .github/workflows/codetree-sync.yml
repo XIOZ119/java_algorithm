@@ -36,6 +36,25 @@ jobs:
             -u XIOZ119:${{ secrets.CODETREE_TOKEN }} \
             https://api.github.com/repos/XIOZ119/codetree_solutions
 
+      - name: Debug token bytes
+        run: |
+          python3 - << 'EOF'
+          import os
+          token = os.environ["CODETREE_TOKEN"]
+          print("LEN:", len(token))
+          print("LAST CHAR ASCII:", ord(token[-1]))
+          print("TOKEN ENDSWITH NEWLINE:", token.endswith("\n"))
+          print("TOKEN REPR:", repr(token[-5:]))
+          EOF
+        env:
+          CODETREE_TOKEN: ${{ secrets.CODETREE_TOKEN }}
+
+      - name: Test with git credential helper
+        run: |
+          git config --global credential.helper store
+          echo "https://XIOZ119:${{ secrets.CODETREE_TOKEN }}@github.com" > ~/.git-credentials
+          git ls-remote https://github.com/XIOZ119/codetree_solutions.git
+
       - name: Test codetree token
         run: |
           git ls-remote https://XIOZ119:${{ secrets.CODETREE_TOKEN }}@github.com/XIOZ119/codetree_solutions.git
