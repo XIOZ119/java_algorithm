@@ -29,15 +29,16 @@ jobs:
           echo "Repo URL: github.com/XIOZ119/codetree_solutions.git"
         env:
           CODETREE_TOKEN: ${{ secrets.CODETREE_TOKEN }}
-      - name: Test codetree token
-        run: |
-          git ls-remote https://XIOZ119:${{ secrets.CODETREE_TOKEN }}@github.com/XIOZ119/codetree_solutions.git
-  
+
       - name: Debug GitHub API access
         run: |
           curl -i \
             -u XIOZ119:${{ secrets.CODETREE_TOKEN }} \
             https://api.github.com/repos/XIOZ119/codetree_solutions
+
+      - name: Test codetree token
+        run: |
+          git ls-remote https://XIOZ119:${{ secrets.CODETREE_TOKEN }}@github.com/XIOZ119/codetree_solutions.git
   
       - name: Debug git ls-remote verbose
         run: |
