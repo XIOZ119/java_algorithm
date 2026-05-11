@@ -23,53 +23,20 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
             
-      - name: Debug secret and repo url
+      - name: Setup SSH for codetree repo
         run: |
-          echo "Secret length: ${#CODETREE_TOKEN}"
-          echo "Repo URL: github.com/XIOZ119/codetree_solutions.git"
-        env:
-          CODETREE_TOKEN: ${{ secrets.CODETREE_TOKEN }}
+          mkdir -p ~/.ssh
+          echo "${{ secrets.CODETREE_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-      - name: Debug GitHub API access
+      - name: Test codetree SSH access
         run: |
-          curl -i \
-            -u XIOZ119:${{ secrets.CODETREE_TOKEN }} \
-            https://api.github.com/repos/XIOZ119/codetree_solutions
-
-      - name: Debug token bytes
-        run: |
-          python3 - << 'EOF'
-          import os
-          token = os.environ["CODETREE_TOKEN"]
-          print("LEN:", len(token))
-          print("LAST CHAR ASCII:", ord(token[-1]))
-          print("TOKEN ENDSWITH NEWLINE:", token.endswith("\n"))
-          print("TOKEN REPR:", repr(token[-5:]))
-          EOF
-        env:
-          CODETREE_TOKEN: ${{ secrets.CODETREE_TOKEN }}
-
-      - name: Test with netrc
-        run: |
-          cat > ~/.netrc <<EOF
-          machine github.com
-            login XIOZ119
-            password ${{ secrets.CODETREE_TOKEN }}
-          EOF
-          chmod 600 ~/.netrc
-          git ls-remote https://github.com/XIOZ119/codetree_solutions.git
-
-      - name: Test codetree token
-        run: |
-          git ls-remote https://XIOZ119:${{ secrets.CODETREE_TOKEN }}@github.com/XIOZ119/codetree_solutions.git
-  
-      - name: Debug git ls-remote verbose
-        run: |
-          GIT_TRACE=1 GIT_CURL_VERBOSE=1 git ls-remote https://XIOZ119:${{ secrets.CODETREE_TOKEN }}@github.com/XIOZ119/codetree_solutions.git
-
+          git ls-remote git@github.com:XIOZ119/codetree_solutions.git
+      
       - name: Add codetree remote
         run: |
-          git remote add codetree https://XIOZ119:${{ secrets.CODETREE_TOKEN }}@github.com/XIOZ119/codetree_solutions.git
+          git remote add codetree git@github.com:XIOZ119/codetree_solutions.git
           git fetch codetree
 
       - name: Pull codetree subtree
