@@ -22,11 +22,31 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-
+            
+      - name: Debug secret and repo url
+        run: |
+          echo "Secret length: ${#CODETREE_TOKEN}"
+          echo "Repo URL: github.com/XIOZ119/codetree_solutions.git"
+        env:
+          CODETREE_TOKEN: ${{ secrets.CODETREE_TOKEN }}
+  
+      - name: Debug GitHub API access
+        run: |
+          curl -i \
+            -H "Authorization: Bearer $CODETREE_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/XIOZ119/codetree_solutions
+        env:
+          CODETREE_TOKEN: ${{ secrets.CODETREE_TOKEN }}
+  
+      - name: Debug git ls-remote verbose
+        run: |
+          GIT_TRACE=1 GIT_CURL_VERBOSE=1 git ls-remote https://x-access-token:${{ secrets.CODETREE_TOKEN }}@github.com/XIOZ119/codetree_solutions.git
+        
       - name: Test codetree token
         run: |
           git ls-remote https://x-access-token:${{ secrets.CODETREE_TOKEN }}@github.com/XIOZ119/codetree_solutions.git
-
+  
       - name: Add codetree remote
         run: |
           git remote add codetree https://x-access-token:${{ secrets.CODETREE_TOKEN }}@github.com/XIOZ119/codetree_solutions.git
