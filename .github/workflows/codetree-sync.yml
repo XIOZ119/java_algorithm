@@ -49,10 +49,14 @@ jobs:
         env:
           CODETREE_TOKEN: ${{ secrets.CODETREE_TOKEN }}
 
-      - name: Test with git credential helper
+      - name: Test with netrc
         run: |
-          git config --global credential.helper store
-          echo "https://XIOZ119:${{ secrets.CODETREE_TOKEN }}@github.com" > ~/.git-credentials
+          cat > ~/.netrc <<EOF
+          machine github.com
+            login XIOZ119
+            password ${{ secrets.CODETREE_TOKEN }}
+          EOF
+          chmod 600 ~/.netrc
           git ls-remote https://github.com/XIOZ119/codetree_solutions.git
 
       - name: Test codetree token
