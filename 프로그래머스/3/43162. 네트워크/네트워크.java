@@ -1,49 +1,53 @@
-import java.util.*;
-import java.io.*;
+import java.util.*; 
 
 class Solution {
-    static List<Integer>[] graph;
-    static int answer;
-    static boolean[] visited;
+    static ArrayList<Integer>[] graph; 
+    static boolean[] visited; 
     
     public int solution(int n, int[][] computers) {
-        answer = 0;
-        
-        graph = new ArrayList[n];
-        
+        graph = new ArrayList[n]; 
         for(int i=0; i<n; i++) {
             graph[i] = new ArrayList<>();
         }
         
-        for(int i=0; i<n; i++) {
-            for(int j=0; j<n; j++) {
-                if(i != j && computers[i][j] == 1) {
-                    graph[i].add(j);
-                }
+        for(int i=0; i<computers.length; i++) {
+            for(int j=0; j<computers[i].length; j++) {
+                if(i == j) continue; 
+                if(computers[i][j] != 1) continue;
+                
+                graph[i].add(j);
+                graph[j].add(i);
             }
         }
         
-        visited = new boolean[n];
+        int answer = 0;
         
-        for(int i=0; i<n; i++){
-            if(visited[i]) continue;
+        visited = new boolean[n];
+        for(int i=0; i<n; i++) {
+            if(visited[i]) continue; 
             
-            visited[i] = true;
-            
-            dfs(i);
+            link(i);
             answer++;
         }
         
         return answer;
     }
     
-    static void dfs(int start){
-        for(int g: graph[start]){
-            if(visited[g]) continue;
+    private static void link(int a) {
+        Queue<Integer> que = new LinkedList<>();
+        que.add(a);
+        visited[a] = true; 
+        
+        while(!que.isEmpty()) {
+            int cur = que.poll();
             
-            visited[g] = true;
-            dfs(g);
+            for(int next: graph[cur]) {
+                if(visited[next]) continue;
+                
+                que.add(next);
+                visited[next] = true;
+            }
         }
+        
     }
-    
 }
