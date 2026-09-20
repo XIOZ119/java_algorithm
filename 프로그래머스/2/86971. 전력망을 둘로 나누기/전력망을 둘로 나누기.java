@@ -1,58 +1,52 @@
-import java.io.*;
-import java.lang.*;
 import java.util.*;
 
 class Solution {
-    static List<Integer>[] network;
-    static int min;
+    static ArrayList<Integer>[] tree; 
+    static int answer = Integer.MAX_VALUE;
     static boolean[] visited;
     
     public int solution(int n, int[][] wires) {
-        min = Integer.MAX_VALUE;
-        network = new ArrayList[n+1];
+        tree = new ArrayList[n+1];
+        for(int i=0; i<n+1; i++) {
+            tree[i] = new ArrayList<>();
+        }
         
-        for(int i=0; i<wires.length; i++) {
+        for(int[] wire: wires) {
+            int a = wire[0]; 
+            int b = wire[1]; 
+            
+            tree[a].add(b); 
+            tree[b].add(a);
+        }
+        
+        for(int[] wire: wires) {
             visited = new boolean[n+1];
             
-            for(int j=0; j<n+1; j++) {
-                network[j] = new ArrayList<>();
-            }
+            int a = wire[0];
+            int b = wire[1];
             
-            for(int j=0; j<wires.length; j++) {
-                if(i==j) continue;
-                network[wires[j][0]].add(wires[j][1]);
-                network[wires[j][1]].add(wires[j][0]);
-            }
+            visited[a] = true;
+            visited[b] = true;
             
-            backtrack();
-        }
-
-        return min;
-    }
-    
-    static void backtrack(){
-        Queue<Integer> queue = new LinkedList<>();
-        queue.add(1);
-        visited[1] = true;
-        
-        while(!queue.isEmpty()) {
-            int cur = queue.poll();
+            Queue<Integer> que = new LinkedList<>();
+            que.add(a);
             
-            for(int n: network[cur]){
-                if(visited[n]) continue;
+            int cnt = 1;
+            while(!que.isEmpty()) {
+                int cur = que.poll();
                 
-                visited[n] = true;
-                queue.add(n);
+                for(int next: tree[cur]) {
+                    if(visited[next]) continue;
+                    
+                    visited[next] = true;
+                    que.add(next);
+                    cnt++;
+                }   
             }
+            
+            answer = Math.min(answer, Math.abs(cnt - (n - cnt)));
         }
         
-        int v = 0, nv = 0;
-        for(int i=1; i<network.length; i++) {
-            if(visited[i]) v++;
-            else nv++;
-        }
-        
-        min = Math.min(min, Math.abs(v - nv));
+        return answer;
     }
-    
 }
