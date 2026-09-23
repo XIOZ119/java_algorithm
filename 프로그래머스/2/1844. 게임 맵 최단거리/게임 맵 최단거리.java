@@ -1,65 +1,50 @@
-// 5x5 맵 (1~5)
-// 내 캐릭터 (1, 1)
-// 동서남북 한칸씩 이동
-// n x m 크기
-// 0 : 벽, 1: 이동 가능
-// 상대 진영: n, m
-
-import java.lang.*;
-import java.io.*;
 import java.util.*;
 
 class Solution {
-    private static int[] dx = {-1, 1, 0, 0};
-    private static int[] dy = {0, 0, -1, 1};
-    private static int m;
-    private static int n;
+    static int[][] maps;
+    static int N, M;
+    static int[] dx = {-1, 1, 0, 0};
+    static int[] dy = {0, 0, -1, 1};
+    static int answer = Integer.MAX_VALUE;
     
     public int solution(int[][] maps) {
-        n = maps.length;
-        m = maps[0].length;
+        this.maps = maps;
+        N = maps.length;
+        M = maps[0].length;
         
-        // System.out.println(m + " " + n + "\n");
+        move();
         
-        int answer = Integer.MAX_VALUE;
-        Queue<int[]> queue = new LinkedList<>();
-        boolean[][] visited = new boolean[n][m];
-        
-        queue.add(new int[] {0, 0, 1});
+        return (answer == Integer.MAX_VALUE) ? -1 : answer;
+    }
+    
+    private static void move() {
+        Queue<int[]> que = new LinkedList<>();
+        boolean[][] visited = new boolean[N][M];
+        que.add(new int[] {0, 0, 1});
         visited[0][0] = true;
         
-        while(!queue.isEmpty()){
-            int[] cur = queue.poll();
+        while(!que.isEmpty()){
+            int[] cur = que.poll();
+            int cx = cur[0]; int cy = cur[1]; int cd = cur[2];
             
-            int cx = cur[0];
-            int cy = cur[1];
-            int cd = cur[2];
-            
-            // System.out.println(cx + " " + cy + " " + cd + "\n");
-            
-            if(cx == n-1 && cy == m-1) {
+            if(cx == N-1 && cy == M-1) {
                 answer = Math.min(answer, cd);
+                continue;
             }
             
             for(int i=0; i<4; i++) {
                 int nx = cx + dx[i];
                 int ny = cy + dy[i];
                 
-                if(!valid(nx, ny) || maps[nx][ny] == 0 || visited[nx][ny])
-                    continue;
+                if(!isValid(nx, ny) || visited[nx][ny]) continue;
                 
-                queue.add(new int[] {nx, ny, cd+1});
                 visited[nx][ny] = true;
+                que.add(new int[] {nx, ny, cd+1});
             }
         }
-        if(answer == Integer.MAX_VALUE) {
-            answer = -1;
-        }
-        
-        return answer;
     }
     
-    private static boolean valid(int x, int y) {
-        return x>=0 &&  y >= 0 && x < n && y < m;
+    private static boolean isValid(int x, int y) {
+        return x >= 0 && y >= 0 && x < N && y < M && maps[x][y] == 1;
     }
 }
