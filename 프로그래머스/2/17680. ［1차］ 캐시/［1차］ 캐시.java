@@ -3,44 +3,44 @@ import java.util.*;
 class Solution {
     public int solution(int cacheSize, String[] cities) {
         int answer = 0;
-        
-        if(cacheSize == 0) {
-            return cities.length * 5;
-        }
-        
-        ArrayList<String> list = new ArrayList<>();
         HashSet<String> set = new HashSet<>();
+        ArrayList<String> list = new ArrayList<>();
         
-        for(String str: cities) {
-            String cityName = str.toUpperCase();
+        for(String c: cities) {
+            String city = c.toUpperCase();
             
-            if(list.isEmpty()) {
-                list.add(cityName);
-                set.add(cityName);
+            if(cacheSize == 0) {
+                answer += 5;
+                continue; 
+            }
+            
+            if(set.isEmpty()) {
+                set.add(city);
+                list.add(city);
                 answer += 5;
                 continue;
             }
             
-            if(set.contains(cityName)) {
-                answer += 1;
+            if(set.contains(city)) {
                 for(int i=0; i<list.size(); i++) {
-                    String city = list.get(i);
-                    if(cityName.equals(city)) {
-                        list.remove(i);
-                        break;
-                    }
+                    if(!list.get(i).equals(city)) continue;
+                    
+                    list.remove(i);
+                    list.add(city);
+                    answer += 1;
+                    break;
                 }
             } else {
-                answer += 5;
-                set.add(cityName);
-                
-                if(list.size() >= cacheSize) {
-                    String city = list.get(0);
+                if(set.size() >= cacheSize) {
+                    String str = list.get(0);
                     list.remove(0);
-                    set.remove(city);
+                    set.remove(str);
                 }
+                
+                set.add(city);
+                list.add(city);
+                answer += 5;
             }
-            list.add(cityName);
         }
         
         return answer;
