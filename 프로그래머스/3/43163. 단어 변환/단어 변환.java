@@ -1,63 +1,39 @@
-import java.lang.*;
 import java.util.*;
-import java.io.*;
 
 class Solution {
-    
-    static class Words {
-        String word;
-        int count;
-        
-        Words(String word, int count) {
-            this.word = word;
-            this.count = count;
-        }
-    }
-    
-    static boolean[] visited;
-    static int l;
-    static int answer;
+    int answer = Integer.MAX_VALUE;
     
     public int solution(String begin, String target, String[] words) {
-        answer = Integer.MAX_VALUE;
+        boolean flag = false;
+        for(String str: words) {
+            if(target.equals(str)) flag = true;
+        }
+        if(!flag) return 0;
         
-        l = words.length;
-        visited = new boolean[l];
+        dfs(words, begin, new boolean[words.length], 0, target);
         
-        bfs(begin, target, words);
-        
-        if(answer == Integer.MAX_VALUE) answer = 0;
         return answer;
     }
     
-    static void bfs(String begin, String target, String[] words) {
-        Queue<Words> queue = new LinkedList<>();
-        queue.add(new Words(begin, 0));
-        
-        while(!queue.isEmpty()){
-            Words curWords = queue.poll();
-            
-            String curWord = curWords.word;
-            int curCount = curWords.count;
-            
-            if(curWord.equals(target)) {
-                answer = Math.min(answer, curCount);
+    public void dfs(String[] words, String begin, boolean[] visited, int cnt, String target) {
+        for(int i=0; i<words.length; i++) {
+            if(begin.equals(target)) {
+                answer = Math.min(answer, cnt);
+                return;
             }
             
-            for(int i=0; i<l; i++){
-                if(visited[i]) continue;
-                
-                String s = words[i];
-                int c = 0; 
-                for(int j=0; j<s.length(); j++){
-                    if(curWord.charAt(j) != s.charAt(j)) c++;
-                }
-                
-                if(c == 1) {
-                    visited[i] = true;
-                    queue.add(new Words(s, curCount+1));
-                }
+            if(visited[i] || begin.equals(words[i])) continue;
+            
+            int wrongCnt = 0; 
+            for(int j=0; j<begin.length(); j++) {
+                if(begin.charAt(j) != words[i].charAt(j)) wrongCnt++;
             }
+            
+            if(wrongCnt > 1) continue;
+            
+            visited[i] = true;
+            dfs(words, words[i], visited, cnt+1, target);
+            visited[i] = false; 
         }
     }
 }
