@@ -2,14 +2,36 @@ import java.util.*;
 
 class Solution {
     public boolean solution(String[] phone_book) {
+        boolean answer = true;
         
-        Arrays.sort(phone_book);
-        for (int i = 0; i < phone_book.length - 1; i++) {
-            if (phone_book[i + 1].startsWith(phone_book[i])) {
-                return false;
-            }
+        ArrayList<String> list = new ArrayList<>();
+        for(String phone: phone_book) {
+            list.add(phone); 
         }
         
-        return true;
+        Collections.sort(list, (a, b) -> {
+            return a.length() - b.length();
+        });
+        
+        HashSet<String> set = new HashSet<>(); 
+        for(String phone: list) {
+            if(set.isEmpty()) {
+                set.add(phone); 
+                continue;
+            }
+            
+            for(int i=0; i<phone.length(); i++) {
+                String sub = phone.substring(0, i+1);
+                
+                if(set.contains(sub)) {
+                    answer = false;
+                    break;
+                }
+            }
+            
+            set.add(phone);
+        }
+        
+        return answer;
     }
 }
